@@ -14,7 +14,7 @@ export class PostResolver {
 
     async preparePostForGqlResponse(post: PostDocument): Promise<Post> {
         /* If all the minimun details exist, return the post */
-        if (post.username && post.first_name && post.last_name && post.dp) {
+        if (post.username && post.first_name && post.last_name) {
             return {
                 postId: post.pid,
                 content: post.content,
