@@ -39,7 +39,9 @@ export class PostService {
     }
 
     async createPost(
-        content: string, 
+        content: string,
+        tags: string[],
+        visibility: boolean,
         uid: string
     ): Promise<Post> {
         try {
@@ -56,6 +58,8 @@ export class PostService {
             const post = await this.postModel.create({
                 pid: uuidv4(),
                 content: content,
+                tags: tags,
+                public: visibility,
                 created_at: new Date(),
                 uid: uid,
                 username: user.username,

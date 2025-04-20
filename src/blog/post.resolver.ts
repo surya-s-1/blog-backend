@@ -89,9 +89,11 @@ export class PostResolver {
 
     @Mutation(() => Post, { name: 'createPost' })
     async createPost(
-        @Args('content') content: string
+        @Args('content') content: string,
+        @Args('tags', { type: () => [String] }) tags: string[],
+        @Args('public', { type: () => Boolean }) visibility: boolean
     ): Promise<Post> {
-        const post: PostDocument = await this.postService.createPost(content, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
+        const post: PostDocument = await this.postService.createPost(content, tags, visibility, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
 
         const result: Post = await this.preparePostForGqlResponse(post)
 
