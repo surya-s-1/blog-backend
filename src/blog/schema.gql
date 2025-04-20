@@ -42,6 +42,10 @@ type User {
   joinedOn: DateTime!
 }
 
+type DeleteUserResponse {
+  success: Boolean!
+}
+
 type Query {
   getHomeFeed(limit: Int! = 10, cursor: DateTime): HomeFeedResponse!
   getUserOwnedPosts: [Post!]!
@@ -54,4 +58,6 @@ type Mutation {
   updatePost(content: String!, tags: [String!]!, public: Boolean!, postId: String!): Post!
   deletePost(postId: String!): DeletePostResponse!
   createUser(username: String!, first_name: String!, middle_name: String, last_name: String!, dob: DateTime!, bio: String, dp: String): User!
+  updateUser(username: String!, first_name: String!, middle_name: String, last_name: String!, dob: DateTime!, bio: String, dp: String): User!
+  deleteUser: DeleteUserResponse!
 }

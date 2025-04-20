@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, HttpException, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './schema/user.schema'
@@ -51,6 +51,71 @@ export class UserService {
             })
     
             return user
+        } catch (err) {
+            if (err instanceof HttpException) {
+                throw err
+            }
+
+            throw new InternalServerErrorException('Something went wrong!')
+        }
+    }
+
+    async updateUser(
+        uid: string,
+        username: string,
+        first_name: string,
+        middle_name: string | null,
+        last_name: string,
+        dob: Date,
+        bio: string | null,
+        dp: string | null
+    ): Promise<User> {
+        try {
+            let user = await this.userModel.findOne({ uid })
+
+            if (!user) {
+                throw new BadRequestException('User not found')
+            }
+
+            await this.userModel.updateOne({ uid }, {
+                username,
+                first_name,
+                middle_name,
+                last_name,
+                bio,
+                dp,
+                dob
+            })
+
+            user = await this.userModel.findOne({ uid })
+
+            if (!user) {
+                throw new BadRequestException('User not found')
+            }
+    
+            return user
+        } catch (err) {
+            if (err instanceof HttpException) {
+                throw err
+            }
+
+            throw new InternalServerErrorException('Something went wrong!')
+        }
+    }
+
+    async deleteUser(
+        uid: string
+    ): Promise<void> {
+        try {
+            let user = await this.userModel.findOne({ uid })
+
+            if (!user) {
+                throw new BadRequestException('User not found')
+            }
+
+            await this.userModel.deleteOne({ uid })
+    
+            return
         } catch (err) {
             if (err instanceof HttpException) {
                 throw err
