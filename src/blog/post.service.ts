@@ -13,8 +13,6 @@ export class PostService {
     ) {}
 
     async getHomeFeed(limit: number, cursor: Date | undefined): Promise<Post[]> {
-        const query: any = {}
-
         if (cursor) {
             return this.postModel
                     .find({ created_at: { $lt: new Date(cursor) }})
@@ -27,11 +25,27 @@ export class PostService {
                     .sort({ created_at: -1 })
                     .limit(limit + 1)
                     .exec()
-        }        
+        }
     }
 
-    async getUserOwnedPosts(uid: string): Promise<Post[]> {
+    async getAllUserOwnedPosts(uid: string): Promise<Post[]> {
         return this.postModel.find({ uid }).exec()
+    }
+
+    async getUserOwnedPosts(uid: string, limit: number, cursor: Date | undefined): Promise<Post[]> {
+        if (cursor) {
+            return this.postModel
+                    .find({ uid, created_at: { $lt: new Date(cursor) }})
+                    .sort({ created_at: -1 })
+                    .limit(limit + 1)
+                    .exec()
+        } else {
+            return this.postModel
+                    .find({ uid })
+                    .sort({ created_at: -1 })
+                    .limit(limit + 1)
+                    .exec()
+        }
     }
 
     async getPost(pid: string): Promise<Post> {

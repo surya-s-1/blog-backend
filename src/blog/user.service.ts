@@ -64,7 +64,7 @@ export class UserService {
 
     async updateUserPosts(uid: string) {
         try {
-            const posts = await this.postService.getUserOwnedPosts(uid)
+            const posts = await this.postService.getAllUserOwnedPosts(uid)
 
             posts.forEach(async (post) => {
                 this.postService.updatePost(post.content, post.tags, post.public, post.pid, post.uid)

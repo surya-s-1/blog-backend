@@ -4,7 +4,7 @@ import { Post as PostDocument } from './schema/post.schema'
 import { User as UserDocument } from './schema/user.schema'
 import { PostService } from './post.service'
 import { UserService } from './user.service'
-import { DeletePostResponse, HomeFeedResponse } from './dto/post.dto'
+import { DeletePostResponse, HomeFeedResponse, UserOwnedPostsResponse } from './dto/post.dto'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -71,18 +71,26 @@ export class PostResolver {
         }
     }
 
-    @Query(() => [Post], { name: 'getUserOwnedPosts' })
-    async getUserOwnedPosts(): Promise<Post[]> {
-        const posts: PostDocument[] = await this.postService.getUserOwnedPosts('ea73b31e-ccab-4115-8143-1676fb7ef8a7')
+    @Query(() => UserOwnedPostsResponse, { name: 'getUserOwnedPosts' })
+    async getUserOwnedPosts(
+        @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
+        @Args('cursor', { type: () => Date, nullable: true }) cursor?: Date
+    ): Promise<UserOwnedPostsResponse> {
+        const posts: PostDocument[] = await this.postService.getUserOwnedPosts('ea73b31e-ccab-4115-8143-1676fb7ef8a7', limit, cursor)
 
         const result: Post[] = []
 
-        posts.forEach(async (po) => {
+        posts.slice(0, limit).forEach(async (po) => {
             const formatted_post: Post = await this.preparePostForGqlResponse(po)
             result.push(formatted_post)
         })
 
-        return result
+        const nextCursor = posts.length > limit ? new Date(posts[limit - 1].created_at) : null
+
+        return {
+            posts: result,
+            nextCursor
+        }
     }
 
     @Query(() => Post, { name: 'getPost' })

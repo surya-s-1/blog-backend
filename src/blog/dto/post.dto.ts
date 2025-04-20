@@ -11,6 +11,15 @@ export class HomeFeedResponse {
 }
 
 @ObjectType()
+export class UserOwnedPostsResponse {
+  @Field(() => [Post])
+  posts: Post[]
+
+  @Field(() => Date, { nullable: true })
+  nextCursor: Date | null
+}
+
+@ObjectType()
 export class DeletePostResponse {
   @Field()
   success: boolean

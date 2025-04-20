@@ -26,6 +26,11 @@ type HomeFeedResponse {
   nextCursor: DateTime
 }
 
+type UserOwnedPostsResponse {
+  posts: [Post!]!
+  nextCursor: DateTime
+}
+
 type DeletePostResponse {
   success: Boolean!
 }
@@ -48,7 +53,7 @@ type DeleteUserResponse {
 
 type Query {
   getHomeFeed(limit: Int! = 10, cursor: DateTime): HomeFeedResponse!
-  getUserOwnedPosts: [Post!]!
+  getUserOwnedPosts(limit: Int! = 10, cursor: DateTime): UserOwnedPostsResponse!
   getPost(postId: String!): Post!
   getUserDetails: User!
 }
