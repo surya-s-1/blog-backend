@@ -12,10 +12,7 @@ export class PostResolver {
         private userService: UserService
     ) {}
 
-    @Query(() => [Post], { name: 'getHomeFeed' })
-    async getHomeFeed(): Promise<Post[]> {
-        const posts: PostDocument[] = await this.postService.getHomeFeed()
-
+    async preparePostsForGqlResponse(posts: PostDocument[]) {
         const result: Post[] = []
         
         posts.forEach(async (p) => {
@@ -53,4 +50,21 @@ export class PostResolver {
         return result
     }
 
+    @Query(() => [Post], { name: 'getHomeFeed' })
+    async getHomeFeed(): Promise<Post[]> {
+        const posts: PostDocument[] = await this.postService.getHomeFeed()
+
+        const result: Post[] = await this.preparePostsForGqlResponse(posts)
+
+        return result
+    }
+
+    @Query(() => [Post], { name: 'getUserOwnedPosts' })
+    async getUserOwnedPosts(): Promise<Post[]> {
+        const posts: PostDocument[] = await this.postService.getUserOwnedPosts('user')
+
+        const result: Post[] = await this.preparePostsForGqlResponse(posts)
+        
+        return result
+    }
 }

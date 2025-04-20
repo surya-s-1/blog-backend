@@ -21,4 +21,5 @@ type Post {
 
 type Query {
   getHomeFeed: [Post!]!
+  getUserOwnedPosts: [Post!]!
 }

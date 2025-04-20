@@ -12,4 +12,8 @@ export class PostService {
     async getHomeFeed(): Promise<Post[]> {
         return this.postModel.find().exec()
     }
+
+    async getUserOwnedPosts(uid: string): Promise<Post[]> {
+        return this.postModel.find({ uid }).exec()
+    }
 }
