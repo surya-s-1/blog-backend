@@ -96,7 +96,7 @@ export class PostService {
     async updatePost(
         content: string,
         tags: string[],
-        visibility: boolean,
+        visibility: Boolean,
         pid: string, 
         uid: string
     ): Promise<Post> {

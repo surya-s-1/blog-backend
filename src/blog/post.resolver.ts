@@ -113,7 +113,7 @@ export class PostResolver {
     async updatePost(
         @Args('content') content: string, 
         @Args('tags', { type: () => [String] }) tags: string[],
-        @Args('public', { type: () => Boolean }) visibility: boolean,
+        @Args('public', { type: () => Boolean }) visibility: Boolean,
         @Args('postId') pid: string
     ): Promise<Post> {
         const post: PostDocument = await this.postService.updatePost(content, tags, visibility, pid, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')

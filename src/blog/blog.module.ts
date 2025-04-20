@@ -8,7 +8,7 @@ import { User, UserSchema } from './schema/user.schema'
 import { Post, PostSchema } from './schema/post.schema'
 import { PostResolver } from './post.resolver'
 import { PostService } from './post.service'
-import { UserResolver } from './user.reolver'
+import { UserResolver } from './user.resolver'
 import { UserService } from './user.service'
 
 @Module({

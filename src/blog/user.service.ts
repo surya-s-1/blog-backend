@@ -2,12 +2,14 @@ import { BadRequestException, ForbiddenException, HttpException, Injectable, Int
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './schema/user.schema'
+import { PostService } from './post.service'
 import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name) private readonly userModel: Model<User>
+        @InjectModel(User.name) private readonly userModel: Model<User>,
+        private postService: PostService
     ) {}
 
     async getUserDetails(uid: string): Promise<User> {
@@ -60,6 +62,18 @@ export class UserService {
         }
     }
 
+    async updateUserPosts(uid: string) {
+        try {
+            const posts = await this.postService.getUserOwnedPosts(uid)
+
+            posts.forEach(async (post) => {
+                this.postService.updatePost(post.content, post.tags, post.public, post.pid, post.uid)
+            })
+        } catch (err) {
+            console.error('Error updating posts', err)
+        }
+    }
+
     async updateUser(
         uid: string,
         username: string,
@@ -92,6 +106,8 @@ export class UserService {
             if (!user) {
                 throw new BadRequestException('User not found')
             }
+
+            this.updateUserPosts(uid)
     
             return user
         } catch (err) {
