@@ -42,7 +42,7 @@ type Query {
 
 type Mutation {
   createPost(content: String!, tags: [String!]!, public: Boolean!): Post!
-  updatePost(content: String!, postId: String!): Post!
+  updatePost(content: String!, tags: [String!]!, public: Boolean!, postId: String!): Post!
   deletePost(postId: String!): Post!
   createUser(username: String!, first_name: String!, middle_name: String, last_name: String!, dob: DateTime!, bio: String, dp: String): User!
 }

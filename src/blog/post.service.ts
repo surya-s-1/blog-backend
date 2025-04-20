@@ -80,7 +80,9 @@ export class PostService {
     }
 
     async updatePost(
-        content: string, 
+        content: string,
+        tags: string[],
+        visibility: boolean,
         pid: string, 
         uid: string
     ): Promise<Post> {
@@ -98,6 +100,8 @@ export class PostService {
     
             await this.postModel.updateOne({ pid, uid }, {
                 content: content,
+                tags: tags,
+                public: visibility,
                 username: user.username,
                 dp: user.dp,
                 first_name: user.first_name,
