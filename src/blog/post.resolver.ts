@@ -1,10 +1,10 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { Post } from './models/post.model'
 import { Post as PostDocument } from './schema/post.schema'
 import { User as UserDocument } from './schema/user.schema'
 import { PostService } from './post.service'
 import { UserService } from './user.service'
-import { DeletePostResponse } from './dto/post.dto'
+import { DeletePostResponse, HomeFeedResponse } from './dto/post.dto'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -49,18 +49,26 @@ export class PostResolver {
         }
     }
 
-    @Query(() => [Post], { name: 'getHomeFeed' })
-    async getHomeFeed(): Promise<Post[]> {
-        const posts: PostDocument[] = await this.postService.getHomeFeed()
+    @Query(() => HomeFeedResponse, { name: 'getHomeFeed' })
+    async getHomeFeed(
+        @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
+        @Args('cursor', { type: () => Date, nullable: true }) cursor?: Date,
+    ): Promise<HomeFeedResponse> {
+        const posts: PostDocument[] = await this.postService.getHomeFeed(limit, cursor)
 
         const result: Post[] = []
 
-        posts.forEach(async (po) => {
+        posts.slice(0, limit).forEach(async (po) => {
             const formatted_post: Post = await this.preparePostForGqlResponse(po)
             result.push(formatted_post)
         })
 
-        return result
+        const nextCursor = posts.length > limit ? new Date(posts[limit - 1].created_at) : null
+
+        return {
+            posts: result,
+            nextCursor
+        }
     }
 
     @Query(() => [Post], { name: 'getUserOwnedPosts' })

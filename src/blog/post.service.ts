@@ -12,8 +12,22 @@ export class PostService {
         @InjectModel(User.name) private readonly userModel: Model<User>
     ) {}
 
-    async getHomeFeed(): Promise<Post[]> {
-        return this.postModel.find().exec()
+    async getHomeFeed(limit: number, cursor: Date | undefined): Promise<Post[]> {
+        const query: any = {}
+
+        if (cursor) {
+            return this.postModel
+                    .find({ created_at: { $lt: new Date(cursor) }})
+                    .sort({ created_at: -1 })
+                    .limit(limit + 1)
+                    .exec()
+        } else {
+            return this.postModel
+                    .find()
+                    .sort({ created_at: -1 })
+                    .limit(limit + 1)
+                    .exec()
+        }        
     }
 
     async getUserOwnedPosts(uid: string): Promise<Post[]> {

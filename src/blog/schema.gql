@@ -21,6 +21,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type HomeFeedResponse {
+  posts: [Post!]!
+  nextCursor: DateTime
+}
+
 type DeletePostResponse {
   success: Boolean!
 }
@@ -38,7 +43,7 @@ type User {
 }
 
 type Query {
-  getHomeFeed: [Post!]!
+  getHomeFeed(limit: Int! = 10, cursor: DateTime): HomeFeedResponse!
   getUserOwnedPosts: [Post!]!
   getPost(postId: String!): Post!
   getUserDetails: User!
