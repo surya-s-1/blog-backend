@@ -36,7 +36,7 @@ type User {
 type Query {
   getHomeFeed: [Post!]!
   getUserOwnedPosts: [Post!]!
-  getPost(postId: String!): [Post!]!
+  getPost(postId: String!): Post!
   getUserDetails: User!
 }
 

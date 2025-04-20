@@ -76,7 +76,7 @@ export class PostResolver {
         return result
     }
 
-    @Query(() => [Post], { name: 'getPost' })
+    @Query(() => Post, { name: 'getPost' })
     async getPost(
         @Args('postId') pid: string
     ): Promise<Post> {
