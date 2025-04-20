@@ -25,7 +25,7 @@ export class PostService {
             const post = await this.postModel.findOne({ pid }).exec()
 
             if (!post) {
-                throw new BadRequestException('Bad Request')
+                throw new BadRequestException('Post not found')
             }
 
             return post
@@ -34,7 +34,7 @@ export class PostService {
                 throw err
             }
 
-            throw new InternalServerErrorException('Internal Server Error')
+            throw new InternalServerErrorException('Something went wrong!')
         }
     }
 
@@ -71,7 +71,7 @@ export class PostService {
                 throw err
             }
 
-            throw new InternalServerErrorException('Internal Server Error')
+            throw new InternalServerErrorException('Something went wrong!')
         }
     }
 
@@ -89,7 +89,7 @@ export class PostService {
             const user = await this.userModel.findOne({ uid })
     
             if (!user || !post) {
-                throw new ForbiddenException('Forbidden')
+                throw new ForbiddenException('User or Post not found')
             }
     
             await this.postModel.updateOne({ pid, uid }, {
@@ -107,7 +107,7 @@ export class PostService {
                 throw err
             }
 
-            throw new InternalServerErrorException('Internal Server Error')
+            throw new InternalServerErrorException('Something went wrong!')
         }
     }
 
@@ -123,7 +123,7 @@ export class PostService {
             const post = await this.postModel.findOne({ pid, uid })
     
             if (!post ) {
-                throw new ForbiddenException('Forbidden')
+                throw new ForbiddenException('User or Post not found')
             }
     
             await this.postModel.deleteOne({ pid })
@@ -134,7 +134,7 @@ export class PostService {
                 throw err
             }
 
-            throw new InternalServerErrorException('Internal Server Error')
+            throw new InternalServerErrorException('Something went wrong!')
         }
     }
 }

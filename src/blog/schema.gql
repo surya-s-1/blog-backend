@@ -21,14 +21,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type User {
+  userId: String!
+  username: String!
+  firstName: String!
+  middleName: String
+  lastName: String!
+  bio: String
+  dp: String
+  dob: DateTime!
+  joinedOn: DateTime!
+}
+
 type Query {
   getHomeFeed: [Post!]!
   getUserOwnedPosts: [Post!]!
   getPost(postId: String!): [Post!]!
+  getUserDetails: User!
 }
 
 type Mutation {
   createPost(content: String!): Post!
   updatePost(content: String!, postId: String!): Post!
   deletePost(postId: String!): Post!
+  createUser(username: String!, first_name: String!, middle_name: String, last_name: String!, dob: DateTime!, bio: String, dp: String): User!
 }

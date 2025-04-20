@@ -54,8 +54,8 @@ export class PostResolver {
 
         const result: Post[] = []
 
-        posts.forEach(async (p) => {
-            const formatted_post: Post = await this.preparePostForGqlResponse(p)
+        posts.forEach(async (po) => {
+            const formatted_post: Post = await this.preparePostForGqlResponse(po)
             result.push(formatted_post)
         })
 
@@ -64,12 +64,12 @@ export class PostResolver {
 
     @Query(() => [Post], { name: 'getUserOwnedPosts' })
     async getUserOwnedPosts(): Promise<Post[]> {
-        const posts: PostDocument[] = await this.postService.getUserOwnedPosts('user')
+        const posts: PostDocument[] = await this.postService.getUserOwnedPosts('ea73b31e-ccab-4115-8143-1676fb7ef8a7')
 
         const result: Post[] = []
 
-        posts.forEach(async (p) => {
-            const formatted_post: Post = await this.preparePostForGqlResponse(p)
+        posts.forEach(async (po) => {
+            const formatted_post: Post = await this.preparePostForGqlResponse(po)
             result.push(formatted_post)
         })
 
@@ -91,7 +91,7 @@ export class PostResolver {
     async createPost(
         @Args('content') content: string
     ): Promise<Post> {
-        const post: PostDocument = await this.postService.createPost(content, '')
+        const post: PostDocument = await this.postService.createPost(content, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
 
         const result: Post = await this.preparePostForGqlResponse(post)
 
@@ -103,7 +103,7 @@ export class PostResolver {
         @Args('content') content: string, 
         @Args('postId') pid: string
     ): Promise<Post> {
-        const post: PostDocument = await this.postService.updatePost(content, pid, '')
+        const post: PostDocument = await this.postService.updatePost(content, pid, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
 
         const result: Post = await this.preparePostForGqlResponse(post)
 
@@ -114,6 +114,6 @@ export class PostResolver {
     async deletePost(
         @Args('postId') pid: string
     ): Promise<void> {
-        await this.postService.deletePost(pid, '')
+        await this.postService.deletePost(pid, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
     }
 }

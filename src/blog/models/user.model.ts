@@ -19,20 +19,14 @@ export class User {
     lastName: string
 
     @Field({ nullable: true })
-    bio: string
+    bio?: string
+
+    @Field({ nullable: true })
+    dp?: string
 
     @Field(() => Date)
     dob: Date
 
     @Field(() => Date)
     joinedOn: Date
-
-    @Field(() => [User], { nullable: 'items' })
-    followers: User[]
-
-    @Field(() => [User], { nullable: 'items' })
-    following: User[]
-
-    @Field(() => [Post], { nullable: 'items' })
-    posts: Post[]
 }
