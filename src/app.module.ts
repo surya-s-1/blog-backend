@@ -9,7 +9,7 @@ import { BlogModule } from './blog/blog.module'
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URI || ''),
-    // BlogModule
+    BlogModule
   ],
   controllers: [AppController],
   providers: [AppService],

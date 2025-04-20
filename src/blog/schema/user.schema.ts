@@ -19,6 +19,9 @@ export class User extends Document {
     l_name: string
 
     @Prop()
+    dp: string
+
+    @Prop()
     bio: string
 
     @Prop({ required: true, type: Date })

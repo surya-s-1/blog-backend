@@ -13,7 +13,7 @@ export class Post extends Document {
     created_at: Date
 
     @Prop({ required: true })
-    owner: string
+    uid: string
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post)

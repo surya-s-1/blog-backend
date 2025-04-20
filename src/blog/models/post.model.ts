@@ -1,10 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { User } from './user.model'
 
 @ObjectType()
 export class Post {
     @Field()
-    id: string
+    pid: string
 
     @Field()
     content: string
@@ -12,6 +11,21 @@ export class Post {
     @Field(() => Date)
     createdAt: Date
 
-    @Field(() => User, { nullable: 'items' })
-    owner: User
+    @Field({ nullable: true })
+    uid?: string
+
+    @Field({ nullable: true })
+    firstName?: string
+
+    @Field({ nullable: true })
+    middleName?: string
+
+    @Field({ nullable: true })
+    lastName?: string
+
+    @Field({ nullable: true })
+    dp?: string
+
+    @Field({ nullable: true })
+    username?: string
 }
