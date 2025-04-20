@@ -28,13 +28,16 @@ export class User extends Document {
     dob: Date
 
     @Prop({ required: true, type: Date })
-    j_date: Date
+    join_date: Date
 
     @Prop({ type: [ String ], default: [] })
     followers: string[]
 
     @Prop({ type: [ String ], default: [] })
     following: string[]
+
+    @Prop()
+    auth_id: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
