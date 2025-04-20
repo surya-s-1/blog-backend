@@ -91,7 +91,7 @@ export class PostService {
                 throw new BadRequestException('Bad Request')
             }
     
-            const post = await this.postModel.findOne({ pid, uid })
+            let post = await this.postModel.findOne({ pid, uid })
             const user = await this.userModel.findOne({ uid })
     
             if (!user || !post) {
@@ -108,6 +108,12 @@ export class PostService {
                 middle_name: user.middle_name,
                 last_name: user.last_name
             })
+
+            post = await this.postModel.findOne({ pid, uid })
+
+            if (!user || !post) {
+                throw new ForbiddenException('User or Post not found')
+            }
     
             return post
         } catch (err) {

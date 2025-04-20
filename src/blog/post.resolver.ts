@@ -4,6 +4,7 @@ import { Post as PostDocument } from './schema/post.schema'
 import { User as UserDocument } from './schema/user.schema'
 import { PostService } from './post.service'
 import { UserService } from './user.service'
+import { DeletePostResponse } from './dto/post.dto'
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -114,10 +115,14 @@ export class PostResolver {
         return result
     }
 
-    @Mutation(() => Post, { name: 'deletePost' })
+    @Mutation(() => DeletePostResponse, { name: 'deletePost' })
     async deletePost(
         @Args('postId') pid: string
-    ): Promise<void> {
+    ): Promise<DeletePostResponse> {
         await this.postService.deletePost(pid, 'ea73b31e-ccab-4115-8143-1676fb7ef8a7')
+
+        return {
+            success: true
+        }
     }
 }
