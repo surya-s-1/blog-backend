@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
+import { GraphQLError, GraphQLFormattedError } from 'graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -15,7 +16,15 @@ import { UserService } from './user.service'
       driver: ApolloDriver,
       graphiql: true,
       autoSchemaFile: join(process.cwd(), 'src/blog/schema.gql'),
-      sortSchema: true
+      formatError: (error: GraphQLError): GraphQLFormattedError => {
+        return {
+          message: error?.message,
+          extensions: {
+            code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+            status: error.extensions?.status || (error.extensions?.originalError as { statusCode: number })?.statusCode || 500,
+          },
+        }
+      }
     }),
     MongooseModule.forFeature([ 
       { name: User.name, schema: UserSchema },

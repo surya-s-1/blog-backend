@@ -7,16 +7,16 @@ export class User extends Document {
     uid: string
 
     @Prop({ required: true })
-    u_name: string
+    username: string
 
     @Prop({ required: true })
-    f_name: string
+    first_name: string
 
     @Prop()
-    m_name?: string
+    middle_name?: string
 
     @Prop({ required: true })
-    l_name: string
+    last_name: string
 
     @Prop()
     dp: string

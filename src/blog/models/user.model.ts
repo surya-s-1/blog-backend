@@ -4,7 +4,7 @@ import { Post } from './post.model'
 @ObjectType()
 export class User {
     @Field()
-    id: string
+    userId: string
 
     @Field()
     username: string

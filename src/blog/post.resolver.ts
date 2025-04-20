@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { Post } from './models/post.model'
 import { Post as PostDocument } from './schema/post.schema'
 import { User as UserDocument } from './schema/user.schema'
@@ -12,49 +12,52 @@ export class PostResolver {
         private userService: UserService
     ) {}
 
-    async preparePostsForGqlResponse(posts: PostDocument[]) {
-        const result: Post[] = []
-        
-        posts.forEach(async (p) => {
-            /* If all the minimun details exist, return the post */
-            if (p.username && p.first_name && p.last_name && p.dp) {
-                result.push({
-                    pid: p.pid,
-                    content: p.content,
-                    createdAt: p.created_at,
-                    uid: p.uid,
-                    username: p.username,
-                    firstName: p.first_name,
-                    middleName: p.middle_name,
-                    lastName: p.last_name,
-                    dp: p.dp
-                })
-            /* Else, query the db for the user data and then return the post */
-            } else {
-                const user: UserDocument | null = await this.userService.getUserDetails(p.uid)
-
-                result.push({
-                    pid: p.pid,
-                    content: p.content,
-                    createdAt: p.created_at,
-                    uid: user?.uid,
-                    username: user?.u_name,
-                    firstName: user?.f_name,
-                    middleName: user?.m_name,
-                    lastName: user?.l_name,
-                    dp: user?.dp
-                })
+    async preparePostForGqlResponse(post: PostDocument): Promise<Post> {
+        /* If all the minimun details exist, return the post */
+        if (post.username && post.first_name && post.last_name && post.dp) {
+            return {
+                postId: post.pid,
+                content: post.content,
+                createdAt: post.created_at,
+                public: post.public,
+                tags: post.tags,
+                userId: post.uid,
+                username: post.username,
+                firstName: post.first_name,
+                middleName: post.middle_name,
+                lastName: post.last_name,
+                dp: post.dp
             }
-        })
+        /* Else, query the db for the user data and then return the post */
+        } else {
+            const user: UserDocument | null = await this.userService.getUserDetails(post.uid)
 
-        return result
+            return {
+                postId: post.pid,
+                content: post.content,
+                createdAt: post.created_at,
+                public: post.public,
+                tags: post.tags,
+                userId: user?.uid,
+                username: user?.username,
+                firstName: user?.first_name,
+                middleName: user?.middle_name,
+                lastName: user?.last_name,
+                dp: user?.dp
+            }
+        }
     }
 
     @Query(() => [Post], { name: 'getHomeFeed' })
     async getHomeFeed(): Promise<Post[]> {
         const posts: PostDocument[] = await this.postService.getHomeFeed()
 
-        const result: Post[] = await this.preparePostsForGqlResponse(posts)
+        const result: Post[] = []
+
+        posts.forEach(async (p) => {
+            const formatted_post: Post = await this.preparePostForGqlResponse(p)
+            result.push(formatted_post)
+        })
 
         return result
     }
@@ -63,8 +66,54 @@ export class PostResolver {
     async getUserOwnedPosts(): Promise<Post[]> {
         const posts: PostDocument[] = await this.postService.getUserOwnedPosts('user')
 
-        const result: Post[] = await this.preparePostsForGqlResponse(posts)
-        
+        const result: Post[] = []
+
+        posts.forEach(async (p) => {
+            const formatted_post: Post = await this.preparePostForGqlResponse(p)
+            result.push(formatted_post)
+        })
+
         return result
+    }
+
+    @Query(() => [Post], { name: 'getPost' })
+    async getPost(
+        @Args('postId') pid: string
+    ): Promise<Post> {
+        const post: PostDocument = await this.postService.getPost(pid)
+
+        const result: Post = await this.preparePostForGqlResponse(post)
+
+        return result
+    }
+
+    @Mutation(() => Post, { name: 'createPost' })
+    async createPost(
+        @Args('content') content: string
+    ): Promise<Post> {
+        const post: PostDocument = await this.postService.createPost(content, '')
+
+        const result: Post = await this.preparePostForGqlResponse(post)
+
+        return result
+    }
+
+    @Mutation(() => Post, { name: 'updatePost' })
+    async updatePost(
+        @Args('content') content: string, 
+        @Args('postId') pid: string
+    ): Promise<Post> {
+        const post: PostDocument = await this.postService.updatePost(content, pid, '')
+
+        const result: Post = await this.preparePostForGqlResponse(post)
+
+        return result
+    }
+
+    @Mutation(() => Post, { name: 'deletePost' })
+    async deletePost(
+        @Args('postId') pid: string
+    ): Promise<void> {
+        await this.postService.deletePost(pid, '')
     }
 }

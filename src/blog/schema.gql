@@ -2,24 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Post {
+  postId: String!
+  content: String!
+  createdAt: DateTime!
+  public: Boolean!
+  tags: [String!]!
+  userId: String
+  username: String
+  firstName: String
+  middleName: String
+  lastName: String
+  dp: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
-type Post {
-  content: String!
-  createdAt: DateTime!
-  dp: String
-  firstName: String
-  lastName: String
-  middleName: String
-  pid: String!
-  uid: String
-  username: String
-}
-
 type Query {
   getHomeFeed: [Post!]!
   getUserOwnedPosts: [Post!]!
+  getPost(postId: String!): [Post!]!
+}
+
+type Mutation {
+  createPost(content: String!): Post!
+  updatePost(content: String!, postId: String!): Post!
+  deletePost(postId: String!): Post!
 }

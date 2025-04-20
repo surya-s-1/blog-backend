@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql'
 @ObjectType()
 export class Post {
     @Field()
-    pid: string
+    postId: string
 
     @Field()
     content: string
@@ -11,8 +11,17 @@ export class Post {
     @Field(() => Date)
     createdAt: Date
 
+    @Field(() => Boolean)
+    public: Boolean
+
+    @Field(() => [String])
+    tags: string[]
+
     @Field({ nullable: true })
-    uid?: string
+    userId?: string
+
+    @Field({ nullable: true })
+    username?: string
 
     @Field({ nullable: true })
     firstName?: string
@@ -25,7 +34,4 @@ export class Post {
 
     @Field({ nullable: true })
     dp?: string
-
-    @Field({ nullable: true })
-    username?: string
 }
