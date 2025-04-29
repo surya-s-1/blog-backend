@@ -2,14 +2,14 @@ import { BadRequestException, ForbiddenException, HttpException, Injectable, Int
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './schema/user.schema'
-import { PostService } from './post.service'
+import { Post } from './schema/post.schema'
 import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name) private readonly userModel: Model<User>,
-        private postService: PostService
+        @InjectModel(Post.name) private readonly postModel: Model<Post>,
     ) {}
 
     async getUserDetails(uid: string): Promise<User> {
@@ -62,18 +62,6 @@ export class UserService {
         }
     }
 
-    async updateUserPosts(uid: string) {
-        try {
-            const posts = await this.postService.getAllUserOwnedPosts(uid)
-
-            posts.forEach(async (post) => {
-                this.postService.updatePost(post.content, post.tags, post.public, post.pid, post.uid)
-            })
-        } catch (err) {
-            console.error('Error updating posts', err)
-        }
-    }
-
     async updateUser(
         uid: string,
         username: string,
@@ -107,7 +95,7 @@ export class UserService {
                 throw new BadRequestException('User not found')
             }
 
-            this.updateUserPosts(uid)
+            this.updateUserPosts(user)
     
             return user
         } catch (err) {
@@ -116,6 +104,20 @@ export class UserService {
             }
 
             throw new InternalServerErrorException('Something went wrong!')
+        }
+    }
+
+    async updateUserPosts(user: User) {
+        try {
+            await this.postModel.updateMany({ uid: user.uid }, {
+                username: user.username,
+                first_name: user.first_name,
+                middle_name: user.middle_name,
+                last_name: user.last_name,
+                dp: user.dp
+            })
+        } catch (err) {
+            console.error('Error updating posts', err)
         }
     }
 

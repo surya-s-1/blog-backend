@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Post } from './post.model'
 
 @ObjectType()
 export class User {
@@ -13,20 +12,26 @@ export class User {
     firstName: string
 
     @Field({ nullable: true })
-    middleName?: string
+    middleName?: string | null
 
     @Field()
     lastName: string
 
     @Field({ nullable: true })
-    bio?: string
+    bio?: string | null
 
     @Field({ nullable: true })
-    dp?: string
+    dp?: string | null
 
     @Field(() => Date)
     dob: Date
 
     @Field(() => Date)
     joinedOn: Date
+
+    @Field()
+    followers: string[]
+
+    @Field()
+    following: string[]
 }

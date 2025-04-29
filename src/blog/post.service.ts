@@ -28,10 +28,6 @@ export class PostService {
         }
     }
 
-    async getAllUserOwnedPosts(uid: string): Promise<Post[]> {
-        return this.postModel.find({ uid }).exec()
-    }
-
     async getUserOwnedPosts(uid: string, limit: number, cursor: Date | undefined): Promise<Post[]> {
         if (cursor) {
             return this.postModel

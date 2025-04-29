@@ -20,7 +20,9 @@ export class UserResolver {
             bio: user.bio,
             dob: user.dob,
             dp: user.dp,
-            joinedOn: user.join_date
+            joinedOn: user.join_date,
+            followers: user.followers,
+            following: user.following
         }
 
         return formatted_user
