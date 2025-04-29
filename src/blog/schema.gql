@@ -45,6 +45,8 @@ type User {
   dp: String
   dob: DateTime!
   joinedOn: DateTime!
+  followers: [String!]!
+  following: [String!]!
 }
 
 type DeleteUserResponse {

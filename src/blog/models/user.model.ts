@@ -12,16 +12,16 @@ export class User {
     firstName: string
 
     @Field({ nullable: true })
-    middleName?: string | null
+    middleName?: string
 
     @Field()
     lastName: string
 
     @Field({ nullable: true })
-    bio?: string | null
+    bio?: string
 
     @Field({ nullable: true })
-    dp?: string | null
+    dp?: string
 
     @Field(() => Date)
     dob: Date
@@ -29,9 +29,9 @@ export class User {
     @Field(() => Date)
     joinedOn: Date
 
-    @Field()
+    @Field(() => [String])
     followers: string[]
 
-    @Field()
+    @Field(() => [String])
     following: string[]
 }
